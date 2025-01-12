@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: producer
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    consumer:
+      client-id: ${spring.application.name}
+      group-id: ${spring.application.name}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      max-poll-records: 1000
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      client-id: ${spring.application.name}
+    listener:
+      observationEnabled: true
+    template:
+      observationEnabled: true
+  main:
+    allow-bean-definition-overriding: true
+    banner-mode: "off"
+  jackson:
+    deserialization:
+      fail-on-null-for-primitives: true
+  config:
+    import:
+      - optional:file:../local.env[.properties]
+      - optional:file:local.env[.properties]
+
+kafka:
+  test-1-partition:
+    topic: test-1-partition
+    listener:
+      id: consumer-app
+      clientIdPrefix: consumer-app
+      retryTimeout: 30ms
+      concurrency: 1
+  test-3-partition:
+    topic: test-3-partition
+    listener:
+      id: consumer-app
+      clientIdPrefix: consumer-app
+      retryTimeout: 30ms
+      concurrency: 3
+  test-12-partition:
+    topic: test-12-partition
+    listener:
+      id: consumer-app
+      clientIdPrefix: consumer-app
+      retryTimeout: 30ms
+      concurrency: 12
+server:
+  port: 8090
