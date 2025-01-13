@@ -51,6 +51,9 @@ dependencies {
     // kafka
     implementation("org.springframework.kafka:spring-kafka:$springKafkaVersion")
 
+    // redis
+//    implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
+
     implementation("io.github.microutils:kotlin-logging:$kotlinLoggingVersion")
 }
 

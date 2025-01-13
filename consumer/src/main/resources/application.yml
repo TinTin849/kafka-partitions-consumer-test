@@ -31,6 +31,11 @@ spring:
     import:
       - optional:file:../local.env[.properties]
       - optional:file:local.env[.properties]
+#  data:
+#    redis:
+#      cluster:
+#        nodes:
+#          - localhost:6380
 
 kafka:
   test-1-partition:
@@ -54,6 +59,13 @@ kafka:
       clientIdPrefix: consumer-app-12
       retryTimeout: 30ms
       concurrency: 12
+  test-12-partition-2:
+    topic: test-12-partition-2
+    listener:
+      id: consumer-app-12-2
+      clientIdPrefix: consumer-app-12-2
+      retryTimeout: 30ms
+      concurrency: 4
 
 server:
   port: 8091

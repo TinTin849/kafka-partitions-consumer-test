@@ -54,5 +54,12 @@ kafka:
       clientIdPrefix: consumer-app
       retryTimeout: 30ms
       concurrency: 12
+  test-12-partition-2:
+    topic: test-12-partition-2
+    listener:
+      id: consumer-app
+      clientIdPrefix: consumer-app
+      retryTimeout: 30ms
+      concurrency: 12
 server:
   port: 8090

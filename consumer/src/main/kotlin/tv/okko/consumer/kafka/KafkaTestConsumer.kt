@@ -1,50 +1,55 @@
 package tv.okko.consumer.kafka
 
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 import tv.okko.consumer.configuration.KafkaProperties
+//import tv.okko.consumer.service.RedisService
 import tv.okko.consumer.util.logger
 import tv.okko.producer.TestMessage
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 
 @Component
 class KafkaTestConsumer(
     val kafkaProperties: KafkaProperties
+//    val redisService: RedisService,
 ) {
-    @Volatile
-    var allMessageCounter: Int = 0
-    @Volatile
-    var messageCounter: Int = 0
-    var runsCounter: Int = 0
+    var atomicAllMessageCounter: AtomicInteger = AtomicInteger(0)
+    var atomicMessageCounter: AtomicInteger = AtomicInteger(0)
+    var runsCounter: AtomicInteger = AtomicInteger(0)
     val timeSource = TimeSource.Monotonic
     var startTime: TimeSource.Monotonic.ValueTimeMark? = null
     var endTime: TimeSource.Monotonic.ValueTimeMark? = null
     val durations = mutableListOf<Long>()
     var fullDuration = Duration.ZERO
 
-    @Volatile
-    var allMessageCounter3: Int = 0
-    @Volatile
-    var messageCounter3: Int = 0
-    var runsCounter3: Int = 0
+    var atomicAllMessageCounter3: AtomicInteger = AtomicInteger(0)
+    var atomicMessageCounter3: AtomicInteger = AtomicInteger(0)
+    var runsCounter3: AtomicInteger = AtomicInteger(0)
     val timeSource3 = TimeSource.Monotonic
     var startTime3: TimeSource.Monotonic.ValueTimeMark? = null
     var endTime3: TimeSource.Monotonic.ValueTimeMark? = null
     val durations3 = mutableListOf<Long>()
     var fullDuration3 = Duration.ZERO
 
-    @Volatile
-    var allMessageCounter12: Int = 0
-    @Volatile
-    var messageCounter12: Int = 0
-    var runsCounter12: Int = 0
+    var atomicAllMessageCounter12: AtomicInteger = AtomicInteger(0)
+    var atomicMessageCounter12: AtomicInteger = AtomicInteger(0)
+    var runsCounter12: AtomicInteger = AtomicInteger(0)
     val timeSource12 = TimeSource.Monotonic
     var startTime12: TimeSource.Monotonic.ValueTimeMark? = null
     var endTime12: TimeSource.Monotonic.ValueTimeMark? = null
     val durations12 = mutableListOf<Long>()
     var fullDuration12 = Duration.ZERO
+
+    var atomicAllMessageCounter122: AtomicInteger = AtomicInteger(0)
+    var atomicMessageCounter122: AtomicInteger = AtomicInteger(0)
+    var runsCounter122: AtomicInteger = AtomicInteger(0)
+    val timeSource122 = TimeSource.Monotonic
+    var startTime122: TimeSource.Monotonic.ValueTimeMark? = null
+    var endTime122: TimeSource.Monotonic.ValueTimeMark? = null
+    val durations122 = mutableListOf<Long>()
+    var fullDuration122 = Duration.ZERO
 
     @KafkaListener(
         id = "#{__listener.kafkaProperties.test1partition.listener.id}",
@@ -54,29 +59,29 @@ class KafkaTestConsumer(
         idIsGroup = false,
     )
     fun handler1PartitionTest(message: TestMessage) {
-        allMessageCounter++
-        messageCounter++
+        val allMessagesConsumed = atomicAllMessageCounter.incrementAndGet()
+        val messagesConsumed = atomicMessageCounter.incrementAndGet()
 
-        if (messageCounter == 1) {
+        if (messagesConsumed == 1) {
             startTime = timeSource.markNow()
-        } else if (messageCounter >= 1000) {
+        } else if (messagesConsumed >= 1000) {
             endTime = timeSource.markNow()
 
-            messageCounter = 0
-            runsCounter++
+            atomicMessageCounter.set(0)
+            val runsCounterValue = runsCounter.incrementAndGet()
 
             val duration = endTime!! - startTime!!
             durations.add(duration.inWholeMilliseconds)
 
             log.warn { "Time spend on 1000 messages: $duration" }
 
-            if (runsCounter >= 10) {
+            if (runsCounterValue >= 10 && runsCounterValue % 5 == 0) {
                 log.warn { "Avg time per 1000 messages in 10 runs is ${durations.average()}" }
             }
         }
 
-        if (allMessageCounter % 250 == 0) {
-            log.info { "$allMessageCounter messages consumed from 1 partition topic" }
+        if (allMessagesConsumed % 250 == 0) {
+            log.info { "$allMessagesConsumed messages consumed from 1 partition topic" }
         }
     }
 
@@ -87,30 +92,30 @@ class KafkaTestConsumer(
         clientIdPrefix = "#{__listener.kafkaProperties.test3partition.listener.clientIdPrefix}",
         idIsGroup = false,
     )
-    fun handler3PartitionTest(message: TestMessage) {
-        allMessageCounter3++
-        messageCounter3++
+    suspend fun handler3PartitionTest(message: TestMessage) {
+        val allMessagesConsumed = atomicAllMessageCounter3.incrementAndGet()
+        val messagesConsumed = atomicMessageCounter3.incrementAndGet()
 
-        if (messageCounter3 == 1) {
+        if (messagesConsumed == 1) {
             startTime3 = timeSource3.markNow()
-        } else if (messageCounter3 >= 1000) {
+        } else if (messagesConsumed >= 1000) {
             endTime3 = timeSource3.markNow()
 
-            messageCounter3 = 0
-            runsCounter3++
+            atomicMessageCounter3.set(0)
+            val runsCounterValue = runsCounter3.incrementAndGet()
 
             val duration = endTime3!! - startTime3!!
             durations3.add(duration.inWholeMilliseconds)
 
             log.warn { "Time spend on 1000 messages: $duration" }
 
-            if (runsCounter3 >= 10) {
+            if (runsCounterValue >= 10 && runsCounterValue % 5 == 0) {
                 log.warn { "Avg time per 1000 messages in 10 runs is ${durations3.average()}" }
             }
         }
 
-        if (allMessageCounter3 % 250 == 0) {
-            log.info { "$allMessageCounter3 messages consumed from 3 partition topic" }
+        if (allMessagesConsumed % 250 == 0) {
+            log.info { "$allMessagesConsumed messages consumed from 1 partition topic" }
         }
     }
 
@@ -121,30 +126,64 @@ class KafkaTestConsumer(
         clientIdPrefix = "#{__listener.kafkaProperties.test12partition.listener.clientIdPrefix}",
         idIsGroup = false,
     )
-    fun handler12PartitionTest(message: TestMessage) {
-        allMessageCounter12++
-        messageCounter12++
+    suspend fun handler12PartitionTest(message: TestMessage) {
+        val allMessagesConsumed = atomicAllMessageCounter12.incrementAndGet()
+        val messagesConsumed = atomicMessageCounter12.incrementAndGet()
 
-        if (messageCounter12 == 1) {
+        if (messagesConsumed == 1) {
             startTime12 = timeSource12.markNow()
-        } else if (messageCounter12 >= 1000) {
+        } else if (messagesConsumed >= 1000) {
             endTime12 = timeSource12.markNow()
 
-            messageCounter12 = 0
-            runsCounter12++
+            atomicMessageCounter12.set(0)
+            val runsCounterValue = runsCounter12.incrementAndGet()
 
             val duration = endTime12!! - startTime12!!
             durations12.add(duration.inWholeMilliseconds)
 
             log.warn { "Time spend on 1000 messages: $duration" }
 
-            if (runsCounter12 >= 10) {
+            if (runsCounterValue >= 10 && runsCounterValue % 5 == 0) {
                 log.warn { "Avg time per 1000 messages in 10 runs is ${durations12.average()}" }
             }
         }
 
-        if (allMessageCounter12 % 250 == 0) {
-            log.info { "$allMessageCounter12 messages consumed from 12 partition topic" }
+        if (allMessagesConsumed % 250 == 0) {
+            log.info { "$allMessagesConsumed messages consumed from 12 partition topic" }
+        }
+    }
+
+    @KafkaListener(
+        id = "#{__listener.kafkaProperties.test12partition2.listener.id}",
+        topics = ["#{__listener.kafkaProperties.test12partition2.topic}"],
+        concurrency = "#{__listener.kafkaProperties.test12partition2.listener.concurrency}",
+        clientIdPrefix = "#{__listener.kafkaProperties.test12partition2.listener.clientIdPrefix}",
+        idIsGroup = false,
+    )
+    suspend fun handler12Partition2Test(message: TestMessage) {
+        val allMessagesConsumed = atomicAllMessageCounter122.incrementAndGet()
+        val messagesConsumed = atomicMessageCounter122.incrementAndGet()
+
+        if (messagesConsumed == 1) {
+            startTime122 = timeSource122.markNow()
+        } else if (messagesConsumed >= 1000) {
+            endTime122 = timeSource122.markNow()
+
+            atomicMessageCounter122.set(0)
+            val runsCounterValue = runsCounter122.incrementAndGet()
+
+            val duration = endTime122!! - startTime122!!
+            durations12.add(duration.inWholeMilliseconds)
+
+            log.warn { "Time spend on 1000 messages: $duration" }
+
+            if (runsCounterValue >= 10 && runsCounterValue % 5 == 0) {
+                log.warn { "Avg time per 1000 messages in 10 runs is ${durations122.average()}" }
+            }
+        }
+
+        if (allMessagesConsumed % 250 == 0) {
+            log.info { "$allMessagesConsumed messages consumed from 12 partition topic by 3 consumers" }
         }
     }
 

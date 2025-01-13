@@ -55,6 +55,14 @@ class MessageController(
                     kafkaProducer.sendTo12Partition(generateTestMessage())
                 }
             }
+            122 -> {
+                for (number in 1..amount) {
+                    if (number % 200 == 0) {
+                        Thread.sleep(10)
+                    }
+                    kafkaProducer.sendTo122Partition(generateTestMessage())
+                }
+            }
             else -> {
                 log.error { "Incorrect topic: $topic" }
             }

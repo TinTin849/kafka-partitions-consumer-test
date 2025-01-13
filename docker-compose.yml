@@ -18,8 +18,8 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@controller-1:9093,2@controller-2:9093,3@controller-3:9093
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      #FOR M4 with macOS 15.2
-      #JAVA_TOOL_OPTIONS: '-XX:UseSVE=0'
+      # FOR M4 with macOS 15.2
+      JAVA_TOOL_OPTIONS: '-XX:UseSVE=0'
 
   controller-2:
     image: apache/kafka:latest
@@ -32,8 +32,8 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@controller-1:9093,2@controller-2:9093,3@controller-3:9093
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      #FOR M4 with macOS 15.2
-      #JAVA_TOOL_OPTIONS: '-XX:UseSVE=0'
+      # FOR M4 with macOS 15.2
+      JAVA_TOOL_OPTIONS: '-XX:UseSVE=0'
 
   controller-3:
     image: apache/kafka:latest
@@ -46,8 +46,8 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@controller-1:9093,2@controller-2:9093,3@controller-3:9093
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      #FOR M4 with macOS 15.2
-      #JAVA_TOOL_OPTIONS: '-XX:UseSVE=0'
+      # FOR M4 with macOS 15.2
+      JAVA_TOOL_OPTIONS: '-XX:UseSVE=0'
 
   broker-1:
     image: apache/kafka:latest
@@ -64,8 +64,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@controller-1:9093,2@controller-2:9093,3@controller-3:9093
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      #FOR M4 with macOS 15.2
-      #JAVA_TOOL_OPTIONS: '-XX:UseSVE=0'
+      # FOR M4 with macOS 15.2
+      JAVA_TOOL_OPTIONS: '-XX:UseSVE=0'
     depends_on:
       - controller-1
       - controller-2
@@ -86,8 +86,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@controller-1:9093,2@controller-2:9093,3@controller-3:9093
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      #FOR M4 with macOS 15.2
-      #JAVA_TOOL_OPTIONS: '-XX:UseSVE=0'
+      # FOR M4 with macOS 15.2
+      JAVA_TOOL_OPTIONS: '-XX:UseSVE=0'
     depends_on:
       - controller-1
       - controller-2
@@ -108,12 +108,24 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@controller-1:9093,2@controller-2:9093,3@controller-3:9093
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      #FOR M4 with macOS 15.2
-      #JAVA_TOOL_OPTIONS: '-XX:UseSVE=0'
+      # FOR M4 with macOS 15.2
+      JAVA_TOOL_OPTIONS: '-XX:UseSVE=0'
     depends_on:
       - controller-1
       - controller-2
       - controller-3
+
+#  redis:
+#    image: redis:latest
+#    container_name: redis_container
+##    environment:
+##      - REDIS_PASSWORD=${REDIS_PASSWORD}
+##      - REDIS_USER=${REDIS_USER}
+##      - REDIS_USER_PASSWORD=${REDIS_USER_PASSWORD}
+#    ports:
+#      - "6380:6379"
+#    volumes:
+#      - ./redisdata:/data
 
 #  producer:
 #    build:

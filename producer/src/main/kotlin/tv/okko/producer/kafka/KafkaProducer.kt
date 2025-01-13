@@ -47,6 +47,15 @@ class KafkaProducer(
             command,
         )
 
+    fun sendTo122Partition(
+        command: TestMessage,
+    ): CompletableFuture<SendResult<String, Any>> =
+        kafkaTemplate.sendWithServiceHeader(
+            kafkaProperties.test12partition2.topic,
+            command.numberData.toString(),
+            command,
+        )
+
     private fun KafkaTemplate<String, Any>.sendWithServiceHeader(
         topic: String,
         key: String,
