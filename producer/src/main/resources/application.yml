@@ -35,31 +35,12 @@ spring:
 kafka:
   test-1-partition:
     topic: test-1-partition
-    listener:
-      id: consumer-app
-      clientIdPrefix: consumer-app
-      retryTimeout: 30ms
-      concurrency: 1
   test-3-partition:
     topic: test-3-partition
-    listener:
-      id: consumer-app
-      clientIdPrefix: consumer-app
-      retryTimeout: 30ms
-      concurrency: 3
   test-12-partition:
     topic: test-12-partition
-    listener:
-      id: consumer-app
-      clientIdPrefix: consumer-app
-      retryTimeout: 30ms
-      concurrency: 12
   test-12-partition-2:
     topic: test-12-partition-2
-    listener:
-      id: consumer-app
-      clientIdPrefix: consumer-app
-      retryTimeout: 30ms
-      concurrency: 12
+
 server:
   port: 8090

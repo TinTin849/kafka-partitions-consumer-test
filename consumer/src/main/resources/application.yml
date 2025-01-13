@@ -31,11 +31,6 @@ spring:
     import:
       - optional:file:../local.env[.properties]
       - optional:file:local.env[.properties]
-#  data:
-#    redis:
-#      cluster:
-#        nodes:
-#          - localhost:6380
 
 kafka:
   test-1-partition:

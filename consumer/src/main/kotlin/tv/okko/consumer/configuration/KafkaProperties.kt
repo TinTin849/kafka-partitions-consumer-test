@@ -8,6 +8,7 @@ data class KafkaProperties(
     val test1partition: TopicListener,
     val test3partition: TopicListener,
     val test12partition: TopicListener,
+    val test12partition2: TopicListener
 )
 
 data class Topic(
